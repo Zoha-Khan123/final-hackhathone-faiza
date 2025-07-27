@@ -10,7 +10,7 @@ export default function FeedbackForm() {
     e.preventDefault();
     try {
       
-      await axios.post('https://final-hackhathone-faiza-ufwq.vercel.app/feedback', form);
+      await axios.post('https://final-hackhathone-faiza.vercel.app/feedback', form);
       navigate('/thankyou');
     } catch (error) {
       alert('Submission failed: ' + (error.response?.data?.message || error.message));
