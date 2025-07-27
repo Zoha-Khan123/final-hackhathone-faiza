@@ -80,7 +80,10 @@ app.post('/admin/login', async (req, res) => {
   }
 
   const token = jwt.sign({ id: admin._id }, process.env.JWT_SECRET_KEY);
-  res.json({ token });
+  return res.status(200).json({ message: "Login successful", token });
+
+
+
 });
 
 // =================== MongoDB Connection==================
