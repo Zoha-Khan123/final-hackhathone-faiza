@@ -9,7 +9,7 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchData = async () => {
       const token = localStorage.getItem('token');
-      const res = await axios.get('https://final-hackhathone-faiza.vercel.app/feedbacks', {
+      const res = await axios.get('https://final-hackhathone-faiza-ufwq.vercel.app/feedbacks', {
         headers: { Authorization: token },
       });
       setFeedbacks(res.data);

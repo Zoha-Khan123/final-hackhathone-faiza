@@ -56,34 +56,49 @@ app.get('/feedbacks', authMiddleware, async (req, res) => {
 
 // =================Admin Create Route (Register)============
 app.post('/admin/create', async (req, res) => {
-  const { username, password } = req.body;
+  const { email, password } = req.body;
   const hashed = await bcrypt.hash(password, 10);
-  const admin = new Admin({ username, password: hashed });
+  const admin = new Admin({ email, password: hashed });
   await admin.save();
   res.json({ message: 'Admin created' });
 });
 
 // ==================Admin Login Route=======================
 app.post('/admin/login', async (req, res) => {
-  const { username, password } = req.body;
-  console.log('Login attempt:', username, password); 
+  const { email, password } = req.body;
+  console.log('Email from client:', email);
+  console.log('Password from client:', password);
 
-  const admin = await Admin.findOne({ username });
+  const admin = await Admin.findOne({ email });
+  console.log('Admin found:', admin); // 👈 Check if this is null or has correct data
+
   if (!admin) {
-    return res.status(401).json({ message: 'Invalid credentials' });
+    return res.status(401).json({ message: 'Invalid credentials (email not found)' });
   }
 
+  console.log('Stored hashed password:', admin.password);
+
   const isMatch = await comparePassword(password, admin.password); 
+  console.log('Password match result:', isMatch); // 👈 true or false?
+
   if (!isMatch) {
-    console.log('Password mismatch');
-    return res.status(401).json({ message: 'Invalid credentials' });
+    return res.status(401).json({ message: 'Invalid credentials (password mismatch)' });
   }
 
   const token = jwt.sign({ id: admin._id }, process.env.JWT_SECRET_KEY);
   return res.status(200).json({ message: "Login successful", token });
+});
 
 
-
+// =============== All users =============
+app.get("/admin/all-users", async (req, res) => {
+  try {
+    const users = await Admin.find();
+    console.log(users);
+    res.status(200).json({ message: users });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
 });
 
 // =================== MongoDB Connection==================
