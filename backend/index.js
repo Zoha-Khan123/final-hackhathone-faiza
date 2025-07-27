@@ -20,7 +20,6 @@ app.use(cors({
     "https://student-management-hackathon-3bx1-8dacb41b1.vercel.app"
   ]
 }));
- app.use(cors());
 
 app.use(express.json());
 
